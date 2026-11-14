@@ -3,7 +3,7 @@
 **Rust 镜像管家** —— 用 Rust + [egui](https://github.com/emilk/egui) 编写的 Windows / macOS 桌面工具，集中切换 Rustup / Cargo 镜像、测速对比并备份恢复配置。
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
-![Platform](https://img.shields.io/badge/platform-Windows%20%7C%20macOS-2DD4BF)
+![Platform](https://img.shields.io/badge/platform-Windows%20%7C%20macOS-E11D48)
 ![Rust](https://img.shields.io/badge/rust-1.88%2B-orange)
 
 ![概览](docs/screenshots/overview.png)
@@ -30,7 +30,7 @@
   - 恢复前再次备份当前状态，因此恢复本身可以撤销。
   - 备份详情可查看完整 Cargo 配置内容与当时的 Rustup 环境配置；macOS/Linux 还会保存完整的 Shell 配置文件。
 - **细节**
-  - 深色 / 浅色主题、中文界面、CJK 字体自动检测（Windows 微软雅黑 / macOS 苹方）。
+  - 深色 / 浅色主题，统一使用黑、白、灰、红四色体系；中文界面与 CJK 字体自动检测（Windows 微软雅黑 / macOS 苹方）。
   - 操作日志、路径快捷打开/复制、失败提示。
   - Windows 单文件发布；macOS 提供 `.app` 打包脚本，无遥测。
 
@@ -72,7 +72,11 @@ open dist/MirrorSwitch.app
 
 ## 界面
 
-> 截图为 Windows 版本；macOS 使用原生窗口、苹方字体和相同的布局。
+> 截图为 Windows 版本；macOS 使用原生窗口、苹方字体和相同的布局。界面统一使用黑、白、灰、红四色体系。
+
+| 深色（默认） | 浅色 |
+| --- | --- |
+| ![深色概览](docs/screenshots/overview.png) | ![浅色概览](docs/screenshots/overview-light.png) |
 
 | 镜像源 | 测速对比 |
 | --- | --- |

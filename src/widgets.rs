@@ -155,9 +155,9 @@ fn arrow_head(painter: &egui::Painter, tip: egui::Pos2, direction: f32, color: C
 
 fn palette_contrast(color: Color32) -> Color32 {
     if color.r() as u16 + color.g() as u16 + color.b() as u16 > 380 {
-        Color32::from_rgb(15, 23, 32)
+        Color32::from_rgb(15, 15, 17)
     } else {
-        Color32::from_rgb(240, 248, 250)
+        Color32::from_rgb(245, 245, 246)
     }
 }
 

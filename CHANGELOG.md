@@ -21,7 +21,7 @@
   - macOS：托管 Shell 配置块（zsh/bash/fish/sh）+ `launchctl setenv`。
 - 镜像测速：延迟、真实 crate/工具链清单下载、综合评分、官方源基线、失败原因。
 - 备份与恢复：自动/手动快照、去重、滚动清理、恢复前再备份、完整 Cargo 与 Shell 文件快照。
-- 深色/浅色主题、中文字体自动检测、操作日志、单文件 Windows 构建与 macOS `.app` 打包。
+- 深色/浅色主题，统一采用黑、白、灰、红四色体系；中文字体自动检测、操作日志、单文件 Windows 构建与 macOS `.app` 打包。
 - 内置 RsProxy、USTC、TUNA、SJTU、阿里云、华为云镜像；USTC 因 Cargo 下载端点异常仅启用 Rustup。
 - GitHub Actions：Windows/macOS CI、Rust 1.88 MSRV、tag 发布工作流。
 

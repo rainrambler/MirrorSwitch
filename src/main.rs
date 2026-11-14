@@ -141,8 +141,8 @@ fn install_panic_hook() {
 fn app_icon() -> egui::IconData {
     const SIZE: usize = 64;
     let mut rgba = vec![0u8; SIZE * SIZE * 4];
-    let accent = [45u8, 212, 191];
-    let dark = [8u8, 22, 26];
+    let accent = [225u8, 29, 72];
+    let dark = [10u8, 10, 12];
     for y in 0..SIZE {
         for x in 0..SIZE {
             let index = (y * SIZE + x) * 4;

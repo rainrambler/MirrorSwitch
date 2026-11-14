@@ -2742,7 +2742,7 @@ impl MirrorSwitchApp {
                     }
                 }
                 ui.label(
-                    RichText::new("主题会立即应用并保存。")
+                    RichText::new("固定四色体系：黑 / 白 / 灰 / 红。切换后立即保存。")
                         .size(10.5)
                         .color(palette.faint),
                 );

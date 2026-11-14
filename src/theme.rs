@@ -7,6 +7,10 @@ use eframe::egui::{
 
 use crate::settings::ThemeMode;
 
+/// The palette is intentionally restricted to black, white, gray and red.
+/// Semantic colors (success/warning/danger/info) are expressed with neutral
+/// grays or red shades instead of green/blue/orange, so the UI stays within the
+/// four-color theme.
 #[derive(Clone, Copy, Debug)]
 pub struct Palette {
     pub dark: bool,
@@ -36,47 +40,47 @@ impl Palette {
         match mode {
             ThemeMode::Dark => Self {
                 dark: true,
-                bg: Color32::from_rgb(9, 13, 18),
-                panel: Color32::from_rgb(13, 19, 26),
-                surface: Color32::from_rgb(17, 25, 34),
-                surface_2: Color32::from_rgb(22, 32, 43),
-                surface_3: Color32::from_rgb(28, 40, 52),
-                border: Color32::from_rgb(35, 49, 64),
-                border_strong: Color32::from_rgb(52, 70, 88),
-                text: Color32::from_rgb(222, 232, 240),
-                text_strong: Color32::from_rgb(244, 249, 252),
-                muted: Color32::from_rgb(137, 154, 170),
-                faint: Color32::from_rgb(93, 109, 125),
-                accent: Color32::from_rgb(45, 212, 191),
-                accent_hover: Color32::from_rgb(94, 234, 212),
-                accent_soft: Color32::from_rgba_unmultiplied(45, 212, 191, 28),
-                on_accent: Color32::from_rgb(6, 30, 28),
-                success: Color32::from_rgb(74, 222, 128),
-                warning: Color32::from_rgb(251, 191, 36),
-                danger: Color32::from_rgb(248, 113, 113),
-                info: Color32::from_rgb(96, 165, 250),
+                bg: Color32::from_rgb(8, 8, 9),
+                panel: Color32::from_rgb(13, 13, 14),
+                surface: Color32::from_rgb(18, 18, 20),
+                surface_2: Color32::from_rgb(24, 24, 27),
+                surface_3: Color32::from_rgb(32, 32, 35),
+                border: Color32::from_rgb(46, 46, 50),
+                border_strong: Color32::from_rgb(70, 70, 76),
+                text: Color32::from_rgb(228, 228, 231),
+                text_strong: Color32::from_rgb(250, 250, 251),
+                muted: Color32::from_rgb(158, 158, 165),
+                faint: Color32::from_rgb(102, 102, 110),
+                accent: Color32::from_rgb(225, 29, 72),
+                accent_hover: Color32::from_rgb(251, 113, 133),
+                accent_soft: Color32::from_rgba_unmultiplied(225, 29, 72, 30),
+                on_accent: Color32::from_rgb(255, 255, 255),
+                success: Color32::from_rgb(228, 228, 231),
+                warning: Color32::from_rgb(251, 113, 133),
+                danger: Color32::from_rgb(239, 68, 68),
+                info: Color32::from_rgb(161, 161, 170),
             },
             ThemeMode::Light => Self {
                 dark: false,
-                bg: Color32::from_rgb(241, 245, 248),
-                panel: Color32::from_rgb(250, 252, 253),
+                bg: Color32::from_rgb(247, 247, 248),
+                panel: Color32::from_rgb(252, 252, 252),
                 surface: Color32::from_rgb(255, 255, 255),
-                surface_2: Color32::from_rgb(246, 249, 251),
-                surface_3: Color32::from_rgb(237, 243, 247),
-                border: Color32::from_rgb(214, 224, 232),
-                border_strong: Color32::from_rgb(185, 199, 211),
-                text: Color32::from_rgb(35, 49, 61),
-                text_strong: Color32::from_rgb(15, 28, 39),
-                muted: Color32::from_rgb(96, 115, 130),
-                faint: Color32::from_rgb(139, 155, 168),
-                accent: Color32::from_rgb(13, 148, 136),
-                accent_hover: Color32::from_rgb(15, 118, 110),
-                accent_soft: Color32::from_rgba_unmultiplied(13, 148, 136, 22),
+                surface_2: Color32::from_rgb(248, 248, 249),
+                surface_3: Color32::from_rgb(240, 240, 241),
+                border: Color32::from_rgb(224, 224, 227),
+                border_strong: Color32::from_rgb(197, 197, 202),
+                text: Color32::from_rgb(39, 39, 42),
+                text_strong: Color32::from_rgb(15, 15, 17),
+                muted: Color32::from_rgb(100, 100, 108),
+                faint: Color32::from_rgb(145, 145, 153),
+                accent: Color32::from_rgb(190, 18, 60),
+                accent_hover: Color32::from_rgb(159, 18, 57),
+                accent_soft: Color32::from_rgba_unmultiplied(190, 18, 60, 22),
                 on_accent: Color32::from_rgb(255, 255, 255),
-                success: Color32::from_rgb(22, 163, 74),
-                warning: Color32::from_rgb(180, 83, 9),
-                danger: Color32::from_rgb(220, 38, 38),
-                info: Color32::from_rgb(37, 99, 235),
+                success: Color32::from_rgb(24, 24, 27),
+                warning: Color32::from_rgb(190, 18, 60),
+                danger: Color32::from_rgb(153, 27, 27),
+                info: Color32::from_rgb(82, 82, 91),
             },
         }
     }
@@ -105,14 +109,14 @@ impl Palette {
 
 pub fn provider_color(id: &str) -> Color32 {
     match id {
-        "rsproxy" => Color32::from_rgb(45, 212, 191),
-        "ustc" => Color32::from_rgb(96, 165, 250),
-        "tuna" => Color32::from_rgb(167, 139, 250),
-        "sjtu" => Color32::from_rgb(248, 113, 113),
-        "aliyun" => Color32::from_rgb(251, 146, 60),
-        "huawei" => Color32::from_rgb(239, 68, 68),
-        "official" => Color32::from_rgb(148, 163, 184),
-        _ => Color32::from_rgb(148, 163, 184),
+        "rsproxy" => Color32::from_rgb(225, 29, 72),
+        "ustc" => Color32::from_rgb(161, 161, 170),
+        "tuna" => Color32::from_rgb(113, 113, 122),
+        "sjtu" => Color32::from_rgb(251, 113, 133),
+        "aliyun" => Color32::from_rgb(244, 63, 94),
+        "huawei" => Color32::from_rgb(113, 113, 122),
+        "official" => Color32::from_rgb(161, 161, 170),
+        _ => Color32::from_rgb(113, 113, 122),
     }
 }
 
