@@ -26,7 +26,7 @@ jobs:
         shell: pwsh
         run: ./scripts/build.ps1
 
-      - uses: actions/upload-artifact@v4
+      - uses: actions/upload-artifact@v7
         with:
           name: mirror-switch-windows
           if-no-files-found: error
@@ -51,7 +51,7 @@ jobs:
           UNIVERSAL: "1"
         run: bash scripts/build-macos.sh
 
-      - uses: actions/upload-artifact@v4
+      - uses: actions/upload-artifact@v7
         with:
           name: mirror-switch-macos
           if-no-files-found: error
