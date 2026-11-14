@@ -24,7 +24,9 @@ try {
     Copy-Item $exe (Join-Path $dist "MirrorSwitch.exe") -Force
     Copy-Item (Join-Path $root "README.md") (Join-Path $dist "README.md") -Force
     Copy-Item (Join-Path $root "LICENSE") (Join-Path $dist "LICENSE") -Force
-    Copy-Item (Join-Path $root "docs") (Join-Path $dist "docs") -Recurse -Force
+    $distDocs = Join-Path $dist "docs"
+    if (Test-Path $distDocs) { Remove-Item $distDocs -Recurse -Force }
+    Copy-Item (Join-Path $root "docs") $distDocs -Recurse -Force
 
     $zipName = "MirrorSwitch-v$version-win64.zip"
     $zip = Join-Path $dist $zipName
