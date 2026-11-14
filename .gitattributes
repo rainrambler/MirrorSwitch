@@ -1,0 +1,14 @@
+* text=auto eol=lf
+
+*.png binary
+*.ico binary
+*.icns binary
+*.zip binary
+
+*.ps1 text eol=crlf
+*.bat text eol=crlf
+*.cmd text eol=crlf
+*.sh text eol=lf
+
+Cargo.lock -diff linguist-generated
+docs/screenshots/*.png linguist-documentation

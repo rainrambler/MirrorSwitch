@@ -1,0 +1,4 @@
+[target.x86_64-pc-windows-msvc]
+# Keep the distributed executable self-contained: no VC++ redistributable
+# requirement beyond what Windows itself provides.
+rustflags = ["-C", "target-feature=+crt-static"]

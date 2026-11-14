@@ -1,0 +1,81 @@
+name: Release
+
+on:
+  push:
+    tags:
+      - "v*"
+
+permissions:
+  contents: write
+
+env:
+  CARGO_TERM_COLOR: always
+
+jobs:
+  windows:
+    name: Windows x64
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: dtolnay/rust-toolchain@stable
+
+      - uses: Swatinem/rust-cache@v2
+
+      - name: Build and package
+        shell: pwsh
+        run: ./scripts/build.ps1
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: mirror-switch-windows
+          if-no-files-found: error
+          path: |
+            dist/*-win64.zip
+            dist/SHA256SUMS.txt
+
+  macos:
+    name: macOS universal
+    runs-on: macos-14
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: dtolnay/rust-toolchain@stable
+        with:
+          targets: aarch64-apple-darwin,x86_64-apple-darwin
+
+      - uses: Swatinem/rust-cache@v2
+
+      - name: Build and package
+        env:
+          UNIVERSAL: "1"
+        run: bash scripts/build-macos.sh
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: mirror-switch-macos
+          if-no-files-found: error
+          path: |
+            dist/*-macos.zip
+            dist/SHA256SUMS-macos.txt
+
+  publish:
+    name: Publish GitHub Release
+    needs: [windows, macos]
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/download-artifact@v4
+        with:
+          path: release
+          merge-multiple: true
+
+      - name: Create release
+        uses: softprops/action-gh-release@v2
+        with:
+          name: MirrorSwitch ${{ github.ref_name }}
+          generate_release_notes: true
+          prerelease: ${{ contains(github.ref_name, '-') }}
+          files: |
+            release/*.zip
+            release/SHA256SUMS*.txt
+          fail_on_unmatched_files: true

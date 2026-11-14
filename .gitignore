@@ -1,0 +1,24 @@
+/target
+/dist
+/.cargo-home
+/.appdata
+/.probe
+/.testdata
+/.smoke
+/screenshot-*.png
+/crop-*.png
+*.pdb
+*.log
+
+# OS
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# Editors
+.idea/
+.vscode/
+.fleet/
+*.iml
+*.swp
+*~
