@@ -244,6 +244,7 @@ MIRRORSWITCH_DATA_DIR="$HOME/Portable/MirrorSwitch" ./MirrorSwitch
 ## 文档
 
 - [架构与安全不变量](docs/ARCHITECTURE.md)
+- [Ubuntu 兼容设计方案（规划）](docs/UBUNTU.md)
 - [发布流程](docs/RELEASING.md)
 - [贡献指南](CONTRIBUTING.md)
 - [行为准则](CODE_OF_CONDUCT.md)
