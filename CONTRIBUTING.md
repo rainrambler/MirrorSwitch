@@ -4,7 +4,7 @@
 
 ## 开发环境
 
-- Rust 1.88+（`rust-toolchain.toml` 会自动选择 stable，并安装 rustfmt/clippy）
+- Rust 1.95+（`rust-toolchain.toml` 会自动选择 stable，并安装 rustfmt/clippy）
 - Windows 10/11：MSVC 工具链
 - macOS 11+：Xcode Command Line Tools（`xcode-select --install`）
 

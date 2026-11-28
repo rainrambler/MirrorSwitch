@@ -46,18 +46,18 @@ jobs:
         run: cargo test --all-targets --locked
 
   msrv:
-    name: Minimum Rust 1.88
+    name: Minimum Rust 1.95
     runs-on: windows-latest
     steps:
       - uses: actions/checkout@v4
 
-      - name: Install Rust 1.88
-        uses: dtolnay/rust-toolchain@1.88.0
+      - name: Install Rust 1.95
+        uses: dtolnay/rust-toolchain@1.95.0
 
       - name: Cache Cargo
         uses: Swatinem/rust-cache@v2
 
       - name: Check
         env:
-          RUSTUP_TOOLCHAIN: 1.88.0
+          RUSTUP_TOOLCHAIN: 1.95.0
         run: cargo check --locked

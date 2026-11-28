@@ -4,6 +4,11 @@
 
 ## [Unreleased]
 
+### Changed
+
+- 升级全部 Cargo 依赖至最新版本：`dirs` 7、`eframe`/`egui` 0.37、`reqwest` 0.13、`windows-sys` 0.61，其余依赖更新至最新补丁版本。
+- 最低 Rust 版本提升至 1.95（egui 0.37 的要求），CI MSRV 检查同步更新。
+
 ### Planned
 
 - Ubuntu 22.04/24.04 兼容、`.deb` 打包与桌面会话环境同步（设计见 `docs/UBUNTU.md`）

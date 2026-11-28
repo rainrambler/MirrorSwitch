@@ -175,7 +175,11 @@ pub fn apply_style(ctx: &egui::Context, mode: ThemeMode) {
         ThemeMode::Light => egui::ThemePreference::Light,
     });
 
-    let mut style = (*ctx.style()).clone();
+    let theme = match mode {
+        ThemeMode::Dark => egui::Theme::Dark,
+        ThemeMode::Light => egui::Theme::Light,
+    };
+    let mut style = (*ctx.style_of(theme)).clone();
     let mut visuals = match mode {
         ThemeMode::Dark => Visuals::dark(),
         ThemeMode::Light => Visuals::light(),
@@ -253,5 +257,5 @@ pub fn apply_style(ctx: &egui::Context, mode: ThemeMode) {
         TextStyle::Monospace,
         FontId::new(12.5, FontFamily::Monospace),
     );
-    ctx.set_style(style);
+    ctx.set_style_of(theme, style);
 }

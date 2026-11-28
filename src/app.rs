@@ -2,7 +2,7 @@ use std::collections::HashSet;
 use std::path::PathBuf;
 use std::sync::atomic::{AtomicBool, Ordering};
 use std::sync::mpsc::Receiver;
-use std::sync::Arc;
+use std::sync::{Arc, Mutex};
 use std::time::{Duration, Instant};
 
 use eframe::egui::{
@@ -254,6 +254,7 @@ pub struct MirrorSwitchApp {
     screenshot_path: Option<PathBuf>,
     screenshot_started: Instant,
     screenshot_requested: bool,
+    screenshot_result: Arc<Mutex<Option<Result<(), String>>>>,
 }
 
 impl MirrorSwitchApp {
@@ -368,6 +369,7 @@ impl MirrorSwitchApp {
             screenshot_path,
             screenshot_started: Instant::now(),
             screenshot_requested: false,
+            screenshot_result: Arc::new(Mutex::new(None)),
         };
 
         if app.screenshot_path.is_some() {
@@ -390,21 +392,17 @@ impl MirrorSwitchApp {
         let Some(path) = self.screenshot_path.clone() else {
             return;
         };
-        let captured = ctx.input(|input| {
-            input.events.iter().find_map(|event| {
-                if let egui::Event::Screenshot { image, .. } = event {
-                    Some(image.clone())
-                } else {
-                    None
-                }
-            })
-        });
-        if let Some(image) = captured {
-            match crate::screenshot::save_png(&path, &image) {
+        let result = self
+            .screenshot_result
+            .lock()
+            .unwrap_or_else(|error| error.into_inner())
+            .take();
+        if let Some(result) = result {
+            match result {
                 Ok(()) => self
                     .log
                     .success(format!("已保存界面截图 {}", path.display())),
-                Err(error) => self.log.error(format!("保存截图失败：{error:#}")),
+                Err(error) => self.log.error(format!("保存截图失败：{error}")),
             }
             self.screenshot_path = None;
             ctx.send_viewport_cmd(egui::ViewportCommand::Close);
@@ -413,7 +411,17 @@ impl MirrorSwitchApp {
         if !self.screenshot_requested
             && self.screenshot_started.elapsed() > Duration::from_millis(1200)
         {
-            ctx.send_viewport_cmd(egui::ViewportCommand::Screenshot(egui::UserData::default()));
+            let slot = Arc::clone(&self.screenshot_result);
+            let repaint_ctx = ctx.clone();
+            let screenshot_path = path.clone();
+            ctx.request_screenshot(move |image| {
+                let result = crate::screenshot::save_png(&screenshot_path, &image)
+                    .map_err(|error| format!("{error:#}"));
+                if let Ok(mut guard) = slot.lock() {
+                    *guard = Some(result);
+                }
+                repaint_ctx.request_repaint();
+            });
             self.screenshot_requested = true;
             ctx.request_repaint_after(Duration::from_millis(150));
         } else if self.screenshot_requested {
@@ -995,10 +1003,10 @@ impl MirrorSwitchApp {
         self.startup_warnings.first().map(String::as_str)
     }
 
-    fn draw_sidebar(&mut self, ctx: &egui::Context) {
+    fn draw_sidebar(&mut self, ui: &mut Ui) {
         let palette = self.palette;
-        egui::SidePanel::left("sidebar")
-            .exact_width(230.0)
+        egui::Panel::left("sidebar")
+            .exact_size(230.0)
             .resizable(false)
             .frame(egui::Frame::new().fill(palette.panel).inner_margin(Margin {
                 left: 14,
@@ -1006,7 +1014,7 @@ impl MirrorSwitchApp {
                 top: 18,
                 bottom: 14,
             }))
-            .show(ctx, |ui| {
+            .show(ui, |ui| {
                 ui.horizontal(|ui| {
                     let (rect, _) = ui.allocate_exact_size(Vec2::splat(36.0), Sense::hover());
                     widgets::paint_logo(ui, rect, palette);
@@ -1050,7 +1058,7 @@ impl MirrorSwitchApp {
 
                 ui.with_layout(Layout::bottom_up(Align::LEFT), |ui| {
                     ui.label(
-                        RichText::new(format!("v{APP_VERSION} · egui 0.32"))
+                        RichText::new(format!("v{APP_VERSION} · egui 0.37"))
                             .size(10.0)
                             .color(palette.faint),
                     );
@@ -1105,7 +1113,7 @@ impl MirrorSwitchApp {
             });
     }
 
-    fn draw_main(&mut self, ctx: &egui::Context, actions: &mut Vec<UiAction>) {
+    fn draw_main(&mut self, ui: &mut Ui, actions: &mut Vec<UiAction>) {
         let palette = self.palette;
         egui::CentralPanel::default()
             .frame(
@@ -1113,7 +1121,7 @@ impl MirrorSwitchApp {
                     .fill(palette.bg)
                     .inner_margin(Margin::symmetric(26, 18)),
             )
-            .show(ctx, |ui| {
+            .show(ui, |ui| {
                 page_header(ui, palette, self.page.title(), self.page.subtitle(), |ui| {
                     if theme_toggle(ui, palette).clicked() {
                         actions.push(UiAction::ThemeToggle);
@@ -3046,7 +3054,7 @@ impl MirrorSwitchApp {
         let palette = self.palette;
         let mut close = false;
         let mut confirmed = false;
-        let modal = egui::Modal::new(Id::new("confirm-dialog"))
+        let modal = egui::Modal::new(Id::unique("confirm-dialog"))
             .backdrop_color(Color32::from_black_alpha(160))
             .frame(
                 egui::Frame::new()
@@ -3125,7 +3133,7 @@ impl MirrorSwitchApp {
             .content
             .clone()
             .unwrap_or_else(|| "（备份时不存在 Cargo 配置文件）".to_owned());
-        let modal = egui::Modal::new(Id::new("snapshot-detail"))
+        let modal = egui::Modal::new(Id::unique("snapshot-detail"))
             .backdrop_color(Color32::from_black_alpha(160))
             .frame(
                 egui::Frame::new()
@@ -3264,7 +3272,7 @@ impl MirrorSwitchApp {
         let palette = self.palette;
         let color = toast.kind.color(palette);
         let mut dismiss = false;
-        egui::Area::new(Id::new("toast-area"))
+        egui::Area::new(Id::unique("toast-area"))
             .anchor(Align2::RIGHT_BOTTOM, Vec2::new(-22.0, -22.0))
             .order(egui::Order::Foreground)
             .show(ctx, |ui| {
@@ -3314,29 +3322,30 @@ impl MirrorSwitchApp {
 }
 
 impl eframe::App for MirrorSwitchApp {
-    fn update(&mut self, ctx: &egui::Context, _frame: &mut eframe::Frame) {
-        self.poll_speed(ctx);
+    fn ui(&mut self, ui: &mut Ui, _frame: &mut eframe::Frame) {
+        let ctx = ui.ctx().clone();
+        self.poll_speed(&ctx);
         if self.last_refresh.elapsed() > Duration::from_secs(5) {
             self.refresh_active();
         }
         let settings_before = self.settings.clone();
         let mut actions = Vec::new();
-        self.draw_sidebar(ctx);
-        self.draw_main(ctx, &mut actions);
-        self.handle_actions(actions, ctx);
+        self.draw_sidebar(ui);
+        self.draw_main(ui, &mut actions);
+        self.handle_actions(actions, &ctx);
 
         let mut follow_up = Vec::new();
-        self.show_confirm_dialog(ctx, &mut follow_up);
-        self.show_detail_dialog(ctx, &mut follow_up);
+        self.show_confirm_dialog(&ctx, &mut follow_up);
+        self.show_detail_dialog(&ctx, &mut follow_up);
         if !follow_up.is_empty() {
-            self.handle_actions(follow_up, ctx);
+            self.handle_actions(follow_up, &ctx);
         }
-        self.show_toast(ctx);
+        self.show_toast(&ctx);
 
         if self.settings != settings_before {
             self.settings.normalize();
             self.palette = Palette::new(self.settings.theme);
-            theme::apply_style(ctx, self.settings.theme);
+            theme::apply_style(&ctx, self.settings.theme);
             self.save_settings();
             let removed = backup::prune_auto(&self.paths, self.settings.max_auto_backups);
             if !removed.is_empty() {
@@ -3351,7 +3360,7 @@ impl eframe::App for MirrorSwitchApp {
         if self.toast.is_some() {
             ctx.request_repaint_after(Duration::from_secs(1));
         }
-        self.handle_screenshot(ctx);
+        self.handle_screenshot(&ctx);
     }
 }
 

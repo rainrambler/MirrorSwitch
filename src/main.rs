@@ -61,7 +61,6 @@ fn main() {
     let options = eframe::NativeOptions {
         viewport,
         renderer: eframe::Renderer::Glow,
-        vsync: true,
         ..Default::default()
     };
 

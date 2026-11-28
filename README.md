@@ -4,7 +4,7 @@
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
 ![Platform](https://img.shields.io/badge/platform-Windows%20%7C%20macOS-E11D48)
-![Rust](https://img.shields.io/badge/rust-1.88%2B-orange)
+![Rust](https://img.shields.io/badge/rust-1.95%2B-orange)
 
 ![概览](docs/screenshots/overview.png)
 
@@ -254,7 +254,7 @@ MIRRORSWITCH_DATA_DIR="$HOME/Portable/MirrorSwitch" ./MirrorSwitch
 
 ## 构建
 
-需要 Rust 1.88+。首次构建需要联网下载依赖。
+需要 Rust 1.95+。首次构建需要联网下载依赖。
 
 ### Windows
 
